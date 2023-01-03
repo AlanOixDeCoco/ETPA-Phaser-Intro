@@ -1,12 +1,12 @@
 var config = {
     type: Phaser.AUTO,
-    width: 256, height: 192,
+    width: 960, height: 640, // 240*160 (GBA Resolution) --> Upscaled 4x to get sharp graphics
     parent: 'phaser-example',
     physics: {
         default: 'arcade',
         arcade: {
             gravity: { y: 300 },
-            debug: true
+            debug: false
         }
     },
     render: {
@@ -20,12 +20,15 @@ var game = new Phaser.Game(config);
 
 
 function preload(){
+    // Sprites
     this.load.image('sky', 'Assets/Sprites/sky.png');
     this.load.image('ground', 'Assets/Sprites/platform.png');
     this.load.image('star', 'Assets/Sprites/star.png');
     this.load.image('bomb', 'Assets/Sprites/bomb.png');
-    this.load.spritesheet('perso','Assets/Sprites/perso.png',
-    { frameWidth: 32, frameHeight: 48 });
+    this.load.spritesheet('perso','Assets/Sprites/perso.png', { frameWidth: 32, frameHeight: 48 });
+
+    // Bitmap Fonts
+    this.load.bitmapFont('CursedScript', 'Assets/Fonts/CursedScript.png', 'Assets/Fonts/CursedScript.fnt');
 }
 
 var platforms;
@@ -50,9 +53,9 @@ function create (){
     sky.setScale(0.35)
 
     // UI
-    scoreText = this.add.text(4, 4, 'Score: 0', {fontSize:"12px", fill:"#000"});
-    deltaTimeText = this.add.text(4, 32, 'Delta Time: ', {fontSize:"12px", fill:"#000"});
-    fpsText = this.add.text(4, 48, 'FPS: ', {fontSize:"12px", fill:"#000"});
+    scoreText = this.add.bitmapText(12, 0, 'CursedScript', 'Score: 0', 48).setTint(0xFFFF00);
+    deltaTimeText = this.add.bitmapText(12, 48, 'CursedScript', 'Delta Time: ', 24).setTint(0xFFFFFF);
+    fpsText = this.add.bitmapText(12, 72, 'CursedScript', 'FPS: ', 24).setTint(0xFFFFFF);
 
     // Props
     stars = this.physics.add.group({
@@ -129,14 +132,14 @@ function update(time){
     // Stats
     deltaTime = time - lastFrameTime;
     lastFrameTime = time;
-    deltaTimeText.text = `Delta Time: ${Number.parseFloat(deltaTime).toFixed(2)}ms`;
-    fpsText.text = `FPS: ${Number.parseFloat(1/(deltaTime/1000)).toFixed()}`;
+    deltaTimeText.setText(`Delta Time: ${Number.parseFloat(deltaTime).toFixed(2)}ms`);
+    fpsText.setText(`FPS: ${Number.parseFloat(1/(deltaTime/1000)).toFixed()}`);
 }
 
 function CollectStar(player, star){
     star.disableBody(true, true); // l’étoile disparaît
     score += 10; //augmente le score de 10
-    scoreText.setText(`Score: ${score}`); //met à jour l’affichage du score
+    scoreText.setText(`$Score: ${score}`); //met à jour l’affichage du score
 
     if (stars.countActive(true) === 0){// si toutes les étoiles sont prises
         // on les affiche toutes de nouveau
