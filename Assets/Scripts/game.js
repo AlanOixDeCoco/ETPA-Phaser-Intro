@@ -1,11 +1,11 @@
 var config = {
     type: Phaser.AUTO,
-    width: 960, height: 640, // 240*160 (GBA Resolution) --> Upscaled 4x to get sharp graphics
+    width: 480, height: 320,
     parent: 'phaser-example',
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 300 },
+            gravity: { y: 981 }, // 9,81 m.s-2 sur Terre
             debug: false
         }
     },
@@ -53,9 +53,10 @@ function create (){
     sky.setScale(0.35)
 
     // UI
-    scoreText = this.add.bitmapText(12, 0, 'CursedScript', 'Score: 0', 48).setTint(0xFFFF00);
-    deltaTimeText = this.add.bitmapText(12, 48, 'CursedScript', 'Delta Time: ', 24).setTint(0xFFFFFF);
-    fpsText = this.add.bitmapText(12, 72, 'CursedScript', 'FPS: ', 24).setTint(0xFFFFFF);
+    titleText = this.add.bitmapText(10, 0, 'CursedScript', 'Game Title', 36).setTint(0x000000);
+    scoreText = this.add.bitmapText(10, 36, 'CursedScript', 'Score: 0', 24).setTint(0xFFFF00);
+    deltaTimeText = this.add.bitmapText(10, 60, 'CursedScript', 'Delta Time: ', 12).setTint(0xFFFFFF);
+    fpsText = this.add.bitmapText(10, 72, 'CursedScript', 'FPS: ', 12).setTint(0xFFFFFF);
 
     // Props
     stars = this.physics.add.group({
@@ -139,7 +140,7 @@ function update(time){
 function CollectStar(player, star){
     star.disableBody(true, true); // l’étoile disparaît
     score += 10; //augmente le score de 10
-    scoreText.setText(`$Score: ${score}`); //met à jour l’affichage du score
+    scoreText.setText(`Score: ${score}`); //met à jour l’affichage du score
 
     if (stars.countActive(true) === 0){// si toutes les étoiles sont prises
         // on les affiche toutes de nouveau
